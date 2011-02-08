@@ -29,4 +29,4 @@ requires:
 resources:
   bugtracker: http://github.com/beanz/device-current-cost-perl/issues
   repository: git://github.com/beanz/device-current-cost-perl.git
-version: 1.110370
+version: 1.110390

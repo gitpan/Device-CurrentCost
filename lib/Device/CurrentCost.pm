@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Device::CurrentCost;
 BEGIN {
-  $Device::CurrentCost::VERSION = '1.110370';
+  $Device::CurrentCost::VERSION = '1.110390';
 }
 
 # ABSTRACT: Perl modules for Current Cost energy monitors
@@ -71,7 +71,10 @@ sub open {
   my $self = shift;
   my $dev = $self->device;
   print STDERR 'Opening serial port: ', $dev, "\n" if DEBUG;
-  sysopen my $fh, $dev, O_RDWR|O_NOCTTY|O_NDELAY
+  my $flags = O_RDWR;
+  eval { $flags |= O_NOCTTY }; # ignore undefined error
+  eval { $flags |= O_NDELAY }; # ignore undefined error
+  sysopen my $fh, $dev, $flags
     or croak "sysopen of '$dev' failed: $!";
   $fh->autoflush(1);
   binmode($fh);
@@ -157,7 +160,7 @@ Device::CurrentCost - Perl modules for Current Cost energy monitors
 
 =head1 VERSION
 
-version 1.110370
+version 1.110390
 
 =head1 SYNOPSIS
 
