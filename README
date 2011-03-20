@@ -2,7 +2,7 @@ NAME
     Device::CurrentCost - Perl modules for Current Cost energy monitors
 
 VERSION
-    version 1.110390
+    version 1.110790
 
 SYNOPSIS
       use Device::CurrentCost;
@@ -19,6 +19,14 @@ SYNOPSIS
       my $classic = Device::CurrentCost->new(device => '/dev/ttyUSB1',
                                              type => CURRENT_COST_CLASSIC);
       ...
+
+      open my $cclog, '<', 'currentcost.log' or die $!;
+      my $cc = Device::CurrentCost->new(filehandle => $cclog);
+
+      while (1) {
+        my $msg = $cc->read() or next;
+        print $msg->summary, "\n";
+      }
 
 DESCRIPTION
     Module for reading from Current Cost energy meters.
@@ -37,7 +45,12 @@ METHODS
 
     device
         The name of the device to connect to. The value should be a tty
-        device name, e.g. "/dev/ttyUSB0". This parameter is mandatory.
+        device name, e.g. "/dev/ttyUSB0" but a pipe or plain file should
+        also work. This parameter is mandatory if filehandle is not given.
+
+    filehandle
+        A filehandle to read from. This parameter is mandatory if device is
+        not given.
 
     type
         The type of the device. Currently either "CURRENT_COST_CLASSIC" or
@@ -46,6 +59,12 @@ METHODS
     baud
         The baud rate for the device. The default is derived from the type
         and is either 57600 (for Envy) or 9600 (for classic).
+
+    history_callback
+        A function, taking a sensor id, a time interval and a hash reference
+        of data as arguments, to be called every time a new complete set of
+        history data becomes available. The data hash reference has keys of
+        the number of intervals ago and values of the reading at that time.
 
   "device()"
     Returns the path to the device.
@@ -79,6 +98,16 @@ METHODS
     insufficient data is available then undef is returned.
 
     IMPORTANT: This API is still subject to change.
+
+  "sensor_history($sensor, $interval)"
+    This method returns the most recent complete sensor data for the given
+    sensor and the given interval (where interval must be one of 'hours',
+    'days', 'months' or 'years'). The return value is a hash reference with
+    keys for 'time' and 'data'. The 'time' value is the time (in seconds
+    since epoch). The 'data' value is a hash reference with keys of the
+    number of intervals ago and values of the reading at that time.
+
+    It returns undef if no history data has been received yet.
 
 AUTHOR
     Mark Hindess <soft-cpan@temporalanomaly.com>

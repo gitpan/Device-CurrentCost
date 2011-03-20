@@ -4,7 +4,7 @@
       "Mark Hindess <soft-cpan@temporalanomaly.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.102341, CPAN::Meta::Converter version 2.101670",
+   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.101670",
    "license" : [
       "perl_5"
    ],
@@ -26,6 +26,7 @@
             "Getopt::Long" : 0,
             "IO::Handle" : 0,
             "IO::Select" : 0,
+            "List::Util" : 0,
             "POSIX" : 0,
             "Pod::Usage" : 0,
             "Time::HiRes" : 0,
@@ -35,9 +36,11 @@
       "test" : {
          "requires" : {
             "English" : 0,
-            "Exporter" : 0,
+            "IO::Pipe" : 0,
             "Test::More" : 0,
-            "perl" : "5.006"
+            "Test::Requires" : 0,
+            "Test::SharedFork" : 0,
+            "Test::Warn" : 0
          }
       }
    },
@@ -52,6 +55,6 @@
          "web" : "http://github.com/beanz/device-current-cost-perl"
       }
    },
-   "version" : "1.110390"
+   "version" : "1.110790"
 }
 

@@ -6,12 +6,12 @@ use strict;
 use constant {
   DEBUG => $ENV{DEVICE_CURRENT_COST_TEST_DEBUG}
 };
-use Test::More tests => 88;
-use t::Helpers qw/test_error/;
+use Test::More tests => 95;
 use POSIX qw/:termios_h/;
 
 $|=1;
 use_ok('Device::CurrentCost');
+use_ok('Device::CurrentCost::Message');
 BEGIN { use_ok('Device::CurrentCost::Constants'); }
 
 my $dev = Device::CurrentCost->new(device => 't/log/envy.reading.xml');
@@ -23,6 +23,7 @@ is($dev->posix_baud, 0010001, '... posix baud rate');
 my $msg = $dev->read;
 ok($msg, '... reading');
 ok(!$msg->has_history, '... no history');
+ok(!$dev->sensor_history(0,'hours'), '... no specific history');
 ok($msg->has_readings, '... has readings');
 is($msg->device, 'CC128', '... device');
 is($msg->device_version, 'v0.11', '... device version');
@@ -58,6 +59,7 @@ is($dev->posix_baud, POSIX::B9600, '... posix baud rate');
 $msg = $dev->read(1);
 ok($msg, '... reading');
 ok(!$msg->has_history, '... no history');
+is_deeply($msg->history, {}, '... empty history hash');
 ok($msg->has_readings, '... has readings');
 is($msg->device_version, 'v1.06', '... device version');
 is($msg->device, 'CC02', '... device');
@@ -99,6 +101,7 @@ $dev = Device::CurrentCost->new(device => 't/log/envy.history.xml');
 $msg = $dev->read();
 ok($msg, '... reading');
 ok($msg->has_history, '... has history');
+ok(!$dev->sensor_history(0,'hours'), '... no specific history');
 ok(!$msg->has_readings, '... no readings');
 is($msg->device_version, 'v0.11', '... device version');
 is($msg->device, 'CC128', '... device');
@@ -175,8 +178,9 @@ is($msg->summary, q{Device: CC128 v0.11
       -290 hours: 0
 }, '... summary');
 
-
-$dev = Device::CurrentCost->new(device => 't/log/classic.history.xml');
+my @hist = ();
+$dev = Device::CurrentCost->new(device => 't/log/classic.history.xml',
+                                history_callback => sub { push @hist, \@_ });
 $msg = $dev->read();
 ok($msg, '... reading');
 ok($msg->has_history, '... has history');
@@ -193,6 +197,18 @@ is(0+$msg->value(1), 7752, '... value(1)');
 is(0+$msg->value(2), 144, '... value(2)');
 is(0+$msg->value(3), 144, '... value(3)');
 is(0+$msg->temperature, 21, '... temperature');
+
+my $history = $dev->sensor_history(0,'days');
+is_deeply($history->{data}, { map { $_=>0 } (1..31) }, '... specific history');
+is_deeply(\@hist,
+          [
+           [ 0, 'days', { map { $_ => 0 } (1..31) } ],
+           [ 0, 'hours', { 2 => 1.3, map { $_*2 => 0 } (2..13) } ],
+           [ 0, 'months', { map { $_ => 0 } (1..12) } ],
+           [ 0, 'years', { map { $_ => 0 } (1..4) } ],
+          ],
+          '... history callback');
+
 is($msg->summary,
    q{Device: CC02 v1.06
   Sensor: 0 [12345,1]
@@ -202,15 +218,15 @@ is($msg->summary,
   Phase 3: 144 watts
   History
     Sensor 0
-      -01 days: 0
-      -02 days: 0
-      -03 days: 0
-      -04 days: 0
-      -05 days: 0
-      -06 days: 0
-      -07 days: 0
-      -08 days: 0
-      -09 days: 0
+      -1 days: 0
+      -2 days: 0
+      -3 days: 0
+      -4 days: 0
+      -5 days: 0
+      -6 days: 0
+      -7 days: 0
+      -8 days: 0
+      -9 days: 0
       -10 days: 0
       -11 days: 0
       -12 days: 0
@@ -233,10 +249,10 @@ is($msg->summary,
       -29 days: 0
       -30 days: 0
       -31 days: 0
-      -02 hours: 1.3
-      -04 hours: 0
-      -06 hours: 0
-      -08 hours: 0
+      -2 hours: 1.3
+      -4 hours: 0
+      -6 hours: 0
+      -8 hours: 0
       -10 hours: 0
       -12 hours: 0
       -14 hours: 0
@@ -246,15 +262,15 @@ is($msg->summary,
       -22 hours: 0
       -24 hours: 0
       -26 hours: 0
-      -01 months: 0
-      -02 months: 0
-      -03 months: 0
-      -04 months: 0
-      -05 months: 0
-      -06 months: 0
-      -07 months: 0
-      -08 months: 0
-      -09 months: 0
+      -1 months: 0
+      -2 months: 0
+      -3 months: 0
+      -4 months: 0
+      -5 months: 0
+      -6 months: 0
+      -7 months: 0
+      -8 months: 0
+      -9 months: 0
       -10 months: 0
       -11 months: 0
       -12 months: 0
@@ -264,7 +280,8 @@ is($msg->summary,
       -4 years: 0
 }, '... summary');
 
-$dev = Device::CurrentCost->new(device => 't/log/cc128.two.xml');
+open my $fh, '<', 't/log/cc128.two.xml' or die $!;
+$dev = Device::CurrentCost->new(filehandle => $fh);
 $msg = $dev->read;
 ok($msg, '... reading');
 ok(!$msg->has_history, '... no history');
@@ -289,3 +306,14 @@ is($msg->summary,
 $dev->{baud} = 9900;
 is(test_error(sub { $dev->posix_baud }),
    "Unsupported baud rate: 9900\n", '... unsupported baud rate');
+
+is(test_error(sub { Device::CurrentCost::Message->new }),
+   'Device::CurrentCost::Message->new: message parameter is required',
+   'message error');
+
+sub test_error {
+  eval { shift->() };
+  local $_ = $@;
+  s/\s+at\s.*$//s;
+  $_;
+}

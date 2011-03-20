@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Device::CurrentCost::Message;
 BEGIN {
-  $Device::CurrentCost::Message::VERSION = '1.110390';
+  $Device::CurrentCost::Message::VERSION = '1.110790';
 }
 
 # ABSTRACT: Perl modules for Current Cost energy monitor messages
@@ -14,6 +14,7 @@ use constant {
 
 use Carp qw/croak carp/;
 use Device::CurrentCost::Constants;
+use List::Util qw/min/;
 
 
 sub new {
@@ -205,7 +206,7 @@ sub _parse_history {
   foreach my $span (qw/hours days months years/) {
     my $first = substr $span, 0, 1;
     while ($string =~ m!<$first(\d+)>([^<]+)</$first\1>!mg) {
-      $rec{$span}->{$1} = 0+$2;
+      $rec{$span}->{0+$1} = 0+$2;
     }
   }
   \%rec;
@@ -223,7 +224,7 @@ Device::CurrentCost::Message - Perl modules for Current Cost energy monitor mess
 
 =head1 VERSION
 
-version 1.110390
+version 1.110790
 
 =head1 SYNOPSIS
 

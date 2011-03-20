@@ -4,13 +4,15 @@ author:
   - 'Mark Hindess <soft-cpan@temporalanomaly.com>'
 build_requires:
   English: 0
-  Exporter: 0
+  IO::Pipe: 0
   Test::More: 0
-  perl: 5.006
+  Test::Requires: 0
+  Test::SharedFork: 0
+  Test::Warn: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.31
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.102341, CPAN::Meta::Converter version 2.101670'
+generated_by: 'Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.101670'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -22,6 +24,7 @@ requires:
   Getopt::Long: 0
   IO::Handle: 0
   IO::Select: 0
+  List::Util: 0
   POSIX: 0
   Pod::Usage: 0
   Time::HiRes: 0
@@ -29,4 +32,4 @@ requires:
 resources:
   bugtracker: http://github.com/beanz/device-current-cost-perl/issues
   repository: git://github.com/beanz/device-current-cost-perl.git
-version: 1.110390
+version: 1.110790

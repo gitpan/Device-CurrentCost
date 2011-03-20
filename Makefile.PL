@@ -13,9 +13,11 @@ my %WriteMakefileArgs = (
   'AUTHOR' => 'Mark Hindess <soft-cpan@temporalanomaly.com>',
   'BUILD_REQUIRES' => {
     'English' => '0',
-    'Exporter' => '0',
+    'IO::Pipe' => '0',
     'Test::More' => '0',
-    'perl' => '5.006'
+    'Test::Requires' => '0',
+    'Test::SharedFork' => '0',
+    'Test::Warn' => '0'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.31'
@@ -32,12 +34,13 @@ my %WriteMakefileArgs = (
     'Getopt::Long' => '0',
     'IO::Handle' => '0',
     'IO::Select' => '0',
+    'List::Util' => '0',
     'POSIX' => '0',
     'Pod::Usage' => '0',
     'Time::HiRes' => '0',
     'constant' => '0'
   },
-  'VERSION' => '1.110390',
+  'VERSION' => '1.110790',
   'test' => {
     'TESTS' => 't/*.t'
   }
