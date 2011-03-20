@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Device::CurrentCost;
 BEGIN {
-  $Device::CurrentCost::VERSION = '1.110791';
+  $Device::CurrentCost::VERSION = '1.110792';
 }
 
 # ABSTRACT: Perl modules for Current Cost energy monitors
@@ -135,7 +135,7 @@ sub read_one {
   my ($self, $rbuf) = @_;
   return unless ($$rbuf);
   print STDERR 'Read one from !', $$rbuf, "!\n" if DEBUG;
-  if ($$rbuf =~ s!^\s*(<msg>.*?</msg>)[\r\n ]*!!) {
+  if ($$rbuf =~ s!^.*?(<msg>.*?</msg>)[\r\n ]*!!s) {
     my $msg = Device::CurrentCost::Message->new(message => $1);
     my $t = $self->_time_now;
     if ($msg->has_history) {
@@ -207,7 +207,7 @@ Device::CurrentCost - Perl modules for Current Cost energy monitors
 
 =head1 VERSION
 
-version 1.110791
+version 1.110792
 
 =head1 SYNOPSIS
 

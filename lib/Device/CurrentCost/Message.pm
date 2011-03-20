@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Device::CurrentCost::Message;
 BEGIN {
-  $Device::CurrentCost::Message::VERSION = '1.110791';
+  $Device::CurrentCost::Message::VERSION = '1.110792';
 }
 
 # ABSTRACT: Perl modules for Current Cost energy monitor messages
@@ -61,10 +61,10 @@ sub message { shift->{message} }
 sub _parse_field {
   my ($self, $field, $default) = @_;
   return $self->{$field} if (exists $self->{$field});
-  if ($self->message =~ m!<$field>(.*?)</$field>!) {
+  if ($self->message =~ m!<$field>(.*?)</$field>!s) {
     my $v = $1;
     $self->{$field} =
-      ($v =~ m!<([^>]+)>(.*?)</\1>!) ? { value => $2, units => $1 } : $v;
+      ($v =~ m!<([^>]+)>(.*?)</\1>!s) ? { value => $2, units => $1 } : $v;
   } elsif (defined $default) {
     return $default;
   } else {
@@ -224,7 +224,7 @@ Device::CurrentCost::Message - Perl modules for Current Cost energy monitor mess
 
 =head1 VERSION
 
-version 1.110791
+version 1.110792
 
 =head1 SYNOPSIS
 

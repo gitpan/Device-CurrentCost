@@ -1,5 +1,9 @@
 Revision history for Perl extension Device::CurrentCost.
 
+1.110792  2011-03-20 21:17:26 Europe/London
+    - Make reader parser more liberal so it accepts more types of
+      input.
+
 1.110791  2011-03-20 13:03:26 Europe/London
     - Minor regexp improvement.
 
