@@ -30,6 +30,6 @@ requires:
   Time::HiRes: 0
   constant: 0
 resources:
-  bugtracker: http://github.com/beanz/device-current-cost-perl/issues
+  bugtracker: https://github.com/beanz/device-current-cost-perl/issues
   repository: git://github.com/beanz/device-current-cost-perl.git
-version: 1.110792
+version: 1.112970

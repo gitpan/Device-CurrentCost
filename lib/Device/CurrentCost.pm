@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Device::CurrentCost;
 BEGIN {
-  $Device::CurrentCost::VERSION = '1.110792';
+  $Device::CurrentCost::VERSION = '1.112970';
 }
 
 # ABSTRACT: Perl modules for Current Cost energy monitors
@@ -207,7 +207,7 @@ Device::CurrentCost - Perl modules for Current Cost energy monitors
 
 =head1 VERSION
 
-version 1.110792
+version 1.112970
 
 =head1 SYNOPSIS
 
@@ -224,7 +224,7 @@ version 1.110792
   use Device::CurrentCost::Constants;
   my $classic = Device::CurrentCost->new(device => '/dev/ttyUSB1',
                                          type => CURRENT_COST_CLASSIC);
-  ...
+  # ...
 
   open my $cclog, '<', 'currentcost.log' or die $!;
   my $cc = Device::CurrentCost->new(filehandle => $cclog);
@@ -298,7 +298,7 @@ Returns the baud rate.
 
 =head2 C<posix_baud()>
 
-Returns the baud rate in L<POSIX#Termios> format.
+Returns the baud rate in L<POSIX::Termios|POSIX/POSIX::Termios> format.
 
 =head2 C<filehandle()>
 

@@ -2,7 +2,7 @@ NAME
     Device::CurrentCost - Perl modules for Current Cost energy monitors
 
 VERSION
-    version 1.110792
+    version 1.112970
 
 SYNOPSIS
       use Device::CurrentCost;
@@ -18,7 +18,7 @@ SYNOPSIS
       use Device::CurrentCost::Constants;
       my $classic = Device::CurrentCost->new(device => '/dev/ttyUSB1',
                                              type => CURRENT_COST_CLASSIC);
-      ...
+      # ...
 
       open my $cclog, '<', 'currentcost.log' or die $!;
       my $cc = Device::CurrentCost->new(filehandle => $cclog);
@@ -76,7 +76,7 @@ METHODS
     Returns the baud rate.
 
   "posix_baud()"
-    Returns the baud rate in POSIX#Termios format.
+    Returns the baud rate in POSIX::Termios format.
 
   "filehandle()"
     Returns the filehandle being used to read from the device.

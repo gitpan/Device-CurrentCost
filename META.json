@@ -47,14 +47,14 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "http://github.com/beanz/device-current-cost-perl/issues"
+         "web" : "https://github.com/beanz/device-current-cost-perl/issues"
       },
       "repository" : {
          "type" : "git",
          "url" : "git://github.com/beanz/device-current-cost-perl.git",
-         "web" : "http://github.com/beanz/device-current-cost-perl"
+         "web" : "https://github.com/beanz/device-current-cost-perl"
       }
    },
-   "version" : "1.110792"
+   "version" : "1.112970"
 }
 
